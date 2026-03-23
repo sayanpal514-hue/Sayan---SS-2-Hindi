@@ -31,7 +31,6 @@
             overflow-x: hidden;
         }
 
-        /* === ANIMATED BACKGROUND === */
         .bg-layer {
             position: fixed;
             inset: 0;
@@ -61,7 +60,6 @@
         @keyframes driftA { from { transform: translate(0,0) scale(1); } to { transform: translate(4%,6%) scale(1.1); } }
         @keyframes driftB { from { transform: translate(0,0) scale(1); } to { transform: translate(-5%,-4%) scale(1.08); } }
 
-        /* === HEADER === */
         header {
             position: relative;
             z-index: 10;
@@ -80,9 +78,7 @@
             gap: 16px;
         }
 
-        .logo-wrap {
-            position: relative;
-        }
+        .logo-wrap { position: relative; }
         .logo {
             width: 52px;
             height: 52px;
@@ -177,7 +173,6 @@
         }
         .tg-btn svg { width: 16px; height: 16px; }
 
-        /* === PLAYER SECTION === */
         .player-section {
             position: relative;
             z-index: 5;
@@ -194,7 +189,6 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
         }
 
-        /* === CHANNEL BAR === */
         .channel-bar {
             display: flex;
             align-items: center;
@@ -232,7 +226,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* === VIDEO === */
         .video-wrapper {
             position: relative;
             padding-bottom: 56.25%;
@@ -247,7 +240,6 @@
             background: #000;
         }
 
-        /* === QUALITY BAR === */
         .quality-bar {
             display: flex;
             align-items: center;
@@ -295,7 +287,6 @@
             color: var(--muted);
         }
 
-        /* === INFO STRIP === */
         .info-strip {
             display: flex;
             gap: 16px;
@@ -318,14 +309,14 @@
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.75);
-            z-index: 999;
+            z-index: 9999;
             display: flex;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(6px);
             animation: fadeIn 0.3s ease;
         }
-        .tg-overlay.hidden { display: none; }
+        .tg-overlay.hidden { display: none !important; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -354,6 +345,7 @@
             font-size: 16px;
             display: flex; align-items: center; justify-content: center;
             transition: background 0.2s;
+            z-index: 10;
         }
         .tg-popup-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
 
@@ -412,8 +404,12 @@
             font-size: 13px;
             cursor: pointer;
             transition: color 0.2s;
-            background: none; border: none;
+            background: none;
+            border: none;
             font-family: 'DM Sans', sans-serif;
+            width: 100%;
+            text-align: center;
+            padding: 6px;
         }
         .tg-skip:hover { color: var(--text2); }
 
@@ -438,7 +434,6 @@
             box-shadow: 0 0 6px var(--green);
         }
 
-        /* === FOOTER === */
         footer {
             position: relative;
             z-index: 5;
@@ -450,7 +445,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* === TICKER === */
         .ticker-wrap {
             overflow: hidden;
             background: linear-gradient(90deg, var(--gold), #e08000);
@@ -481,10 +475,8 @@
 </head>
 <body>
 
-<!-- BG FX -->
 <div class="bg-layer"></div>
 
-<!-- TICKER -->
 <div class="ticker-wrap" aria-hidden="true">
     <div class="ticker">
         <span>🏏 Sayan SS1 Hindi</span>
@@ -500,7 +492,6 @@
     </div>
 </div>
 
-<!-- HEADER -->
 <header>
     <div class="brand">
         <div class="logo-wrap">
@@ -524,11 +515,9 @@
     </div>
 </header>
 
-<!-- PLAYER SECTION -->
 <main class="player-section">
     <div class="player-card">
 
-        <!-- Channel Bar -->
         <div class="channel-bar">
             <div class="channel-label">
                 <div class="channel-icon">🏏</div>
@@ -543,14 +532,19 @@
             </div>
         </div>
 
-        <!-- Video -->
         <div class="video-wrapper">
             <video id="cricket-video" controls autoplay playsinline></video>
         </div>
 
-        
+        <div class="quality-bar">
+            <span class="quality-label">Quality:</span>
+            <button class="quality-btn" onclick="setQuality(240, this)">240p</button>
+            <button class="quality-btn" onclick="setQuality(360, this)">360p</button>
+            <button class="quality-btn active" onclick="setQuality(720, this)">720p HD</button>
+            <button class="quality-btn" onclick="setQuality(1080, this)">1080p</button>
+            <span class="quality-note" id="quality-note">HD · 720p selected</span>
+        </div>
 
-        <!-- Info Strip -->
         <div class="info-strip">
             <div class="info-item">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -569,16 +563,15 @@
     </div>
 </main>
 
-<!-- FOOTER -->
 <footer>
     &copy; <span id="year"></span> All rights reserved by Sayan
 </footer>
 
 <!-- TELEGRAM POPUP -->
-<div class="tg-overlay" id="tg-overlay">
+<div class="tg-overlay hidden" id="tg-overlay">
     <div class="tg-popup" role="dialog" aria-label="Join Telegram Channel">
-        <button class="tg-popup-close" onclick="closeTelegramPopup()" aria-label="Close">✕</button>
-        
+        <button class="tg-popup-close" id="popup-close-btn" aria-label="Close">✕</button>
+
         <div class="tg-icon-big">
             <svg viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.94z"/></svg>
         </div>
@@ -596,13 +589,14 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.94z"/></svg>
             Join @TestCricket18
         </a>
-        <button class="tg-skip" onclick="closeTelegramPopup()">Maybe later</button>
+        <button class="tg-skip" id="tg-skip-btn">Maybe later</button>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
-<script>http://tvn1.chowdhury-shaheb.com/starsport2/index.m3u8
-    const M3U8_URL = '';
+<script>
+    // ✅ FIX: M3U8 URL is now properly inside the string
+    const M3U8_URL = 'http://tvn1.chowdhury-shaheb.com/starsport2/index.m3u8';
 
     let hls;
 
@@ -616,19 +610,16 @@
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            // Safari native HLS
             video.src = url;
             video.play().catch(() => {});
         }
     }
 
-    /* Quality buttons just reload the same URL (single stream) */
     function setQuality(q, btn) {
         document.querySelectorAll('.quality-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const labels = {240:'Low · 240p',360:'Standard · 360p',480:'SD · 480p',720:'HD · 720p',1080:'Full HD · 1080p'};
+        const labels = { 240: 'Low · 240p', 360: 'Standard · 360p', 480: 'SD · 480p', 720: 'HD · 720p', 1080: 'Full HD · 1080p' };
         document.getElementById('quality-note').textContent = (labels[q] || '') + ' selected';
-        // Stream is adaptive; quality note is informational
     }
 
     function openTelegramPopup() {
@@ -644,11 +635,17 @@
         document.getElementById('year').textContent = new Date().getFullYear();
         loadStream(M3U8_URL);
 
+        // ✅ FIX: Wire up buttons via addEventListener (more reliable than inline onclick for popup)
+        document.getElementById('popup-close-btn').addEventListener('click', closeTelegramPopup);
+        document.getElementById('tg-skip-btn').addEventListener('click', closeTelegramPopup);
+
+        // ✅ FIX: Popup starts hidden, shown after delay
         if (!localStorage.getItem('tg_popup_closed')) {
             setTimeout(openTelegramPopup, 3000);
         }
     });
 
+    // Close when clicking backdrop
     document.getElementById('tg-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeTelegramPopup();
     });
